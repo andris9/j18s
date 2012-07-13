@@ -89,6 +89,14 @@ You can register language change handlers with `on("change")`
 
     j18s.setLang("et"); // outputs 'Language changed to: et'
 
+For example, you could use this feature to lazy load the language data from the server.
+
+    j18s.on("change", function(lang){
+        yourLoadJsonWithAjax("/load-language.php?lang="+lang, function(langData){
+            j18s.addLang(lang, langData);
+        })
+    });
+
 ### Translate a String
 
 Translate a string with `translate()`
