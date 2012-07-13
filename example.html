@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>j18s translations</title>
+        <script src="j18s.js"></script>
+
+        <script>
+            // Add translation strings
+            j18s.addLang("et",{
+                "muu": {
+                    "This post has %s comment": ["Sellel postitusel on %s kommentaar", "Sellel postitusel on %s kommentaari"]
+                },
+                "menu":{
+                    "English": "Inglise keeles",
+                    "Estonian": "Eesti keeles",
+                    "Change comment count": "Muuda kommentaaride arvu"
+                }
+            });
+
+            // update comment count for an element
+            function changeComments(){
+                var comments = Math.floor(Math.random()*10);
+                j18s.update(document.getElementById("comments"),{
+                    pluralCount: comments,
+                    textArgs: [comments]
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <p>
+            <a href="javascript:j18s.setLang('en')" class="j18s-translate" data-j18s-context="menu">English</a>
+            |
+            <a href="javascript:j18s.setLang('et')" class="j18s-translate" data-j18s-context="menu">Estonian</a>
+        </p>
+        <p>
+            <span id="comments" class="j18s-translate"
+                data-j18s-text="This post has %s comment"
+                data-j18s-plural="This post has %s comments"
+                data-j18s-plural-count="5"
+                data-j18s-text-args="5"
+                data-j18s-context="muu"
+                >This post has 5 comments</span>
+        </p>
+        <p>
+            <a href="javascript:changeComments()" class="j18s-translate" data-j18s-context="menu">Change comment count</a>
+        </p>
+    </body>
+</html>
