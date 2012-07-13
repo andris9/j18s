@@ -7,7 +7,7 @@ This module mainly deals with DOM elements that are marked to be translated. If 
 language, all DOM elements that are marked for translation are translated automatically, keeping
 correct plurals etc.
 
-See [demo](http://tahvel.info/j18s/example.html).
+See the [demo here](http://tahvel.info/j18s/example.html).
 
 ## Usage
 
@@ -78,6 +78,16 @@ and `%1$s` type blocks when translated.
         }});
 
 ## API
+
+### Detect language change
+
+You can register language change handlers with `on("change")`
+
+    j18s.on("change", function(lang){
+        console.log("Language changed to: "+lang);
+    });
+
+    j18s.setLang("et"); // outputs 'Language changed to: et'
 
 ### Translate a String
 

@@ -13,6 +13,12 @@ var j18s = {
      */
     _translations: {},
 
+    /**
+     * Event listeners
+     * @private
+     */
+    _eventListeners: {},
+
     // PUBLIC API
 
     /**
@@ -60,7 +66,13 @@ var j18s = {
         if(this._curLang == lang && !forceRefresh){
             return;
         }
-        this._curLang = lang;
+        if(this._curLang != lang){
+            this._curLang = lang;
+            this._emit("change", this._curLang);
+        }else{
+            this._curLang = lang;
+        }
+        
         this._updateTranslations();
     },
 
@@ -104,39 +116,11 @@ var j18s = {
         }
 
         translationData = this._getTranslationData(elm);
-        this.updatePlural.apply(this, [elm, translationData.context, translationData.pluralCount].concat(translationData.textArgs));
+        this.update.apply(this, [elm, translationData.context, translationData.pluralCount].concat(translationData.textArgs));
     },
 
     /**
-     * Translate singular form of the element
-     * 
-     * @param {Element} elm DOM element
-     * @param {String} context Context string, if falsy value defaults to "default"
-     * @param {String} [arg1] Replacment string for first %s
-     * @param {String} [arg2] Replacment string for second %s
-     * @param {String} [argN] Replacment string for nth %s
-     *
-     * Or alternatively
-     * 
-     * @param {Element} elm DOM element
-     * @param {Object} options Translation options for the element
-     * @param {String} [options.text] Untranslated text for the element (defaults to innerHTML)
-     * @param {String} [options.plural] Untranslated plural text for the element (defaults to innerHTML)
-     * @param {Number} [options.pluralCount] Plural count for determining the correct translation string, defaults to 1
-     * @param {String} [options.context] Context for the translation, defaults to "default"
-     * @param {String} [options.useLang] Explicilty set the language that should be used when translating this element
-     * @param {String|Array} [options.textArgs] Replacement string or an array of strings for %s and %1$s blocks
-     */
-    update: function(/* elm, context, arg1, arg2, ... */){
-        var args = Array.prototype.slice.call(arguments),
-            elm = args.shift(),
-            context = args.shift();
-
-        return this.updatePlural.apply(this, [elm, context, 1].concat(args));
-    },
-
-    /**
-     * Translate plural form of the element
+     * Translate the text of a DOM element
      * 
      * @param {Element} elm DOM element
      * @param {String} context Context string, if falsy value defaults to "default"
@@ -156,7 +140,7 @@ var j18s = {
      * @param {String} [options.useLang] Explicilty set the language that should be used when translating this element
      * @param {String|Array} [options.textArgs] Replacement string or an array of strings for %s and %1$s blocks
      */
-    updatePlural: function(/* elm, context, pluralCount, arg1, arg2, ... */){
+    update: function(/* elm, context, pluralCount, arg1, arg2, ... */){
         var args = Array.prototype.slice.call(arguments),
             elm = args.shift(),
             context, pluralCount, translationString,
@@ -229,6 +213,24 @@ var j18s = {
         }
 
         return this._formatString.apply(this, [translation].concat(options.textArgs || []));
+    },
+
+    /**
+     * Register an event listener
+     *
+     * @param {String} eventName The name of the event
+     * @param {Function} listener Event callback
+     */
+    on: function(eventName, listener){
+        eventName = (eventName || "").toString();
+        if(typeof listener != "function"){
+            return;
+        }
+        if(!this._eventListeners[eventName]){
+            this._eventListeners[eventName] = [listener];
+        }else{
+            this._eventListeners[eventName].push(listener);
+        }
     },
 
     // PRIVATE API
@@ -335,7 +337,7 @@ var j18s = {
 
         for(var i=0, len = elements.length; i<len; i++){
             translationData = this._getTranslationData(elements[i]);
-            this.updatePlural.apply(this, [elements[i], translationData.context, translationData.pluralCount].concat(translationData.textArgs));
+            this.update.apply(this, [elements[i], translationData.context, translationData.pluralCount].concat(translationData.textArgs));
         }
     },
 
@@ -489,5 +491,25 @@ var j18s = {
         return str.replace(/[A-Z]/g, function(o){
             return "-" + o.toLowerCase();
         });
+    },
+
+    /**
+     * Emits an event
+     */
+    _emit: function(/* eventName, data */){
+        var args = Array.prototype.slice.call(arguments),
+            eventName = (args.shift() || "").toString(),
+            that = this;
+
+        if(this._eventListeners[eventName]){
+            for(var i=0, len = this._eventListeners[eventName].length; i<len; i++){
+                (function(i){
+                    setTimeout(function(){
+                        that._eventListeners[eventName][i].apply(this, args);
+                    }, 0);
+                })(i);
+                
+            }
+        }
     }
 };
