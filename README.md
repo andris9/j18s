@@ -7,6 +7,8 @@ This module mainly deals with DOM elements that are marked to be translated. If 
 language, all DOM elements that are marked for translation are translated automatically, keeping
 correct plurals etc.
 
+See [demo](http://tahvel.info/j18s/example.html).
+
 ## Usage
 
 Include j18s.js in your page
@@ -219,3 +221,7 @@ Example
 
     // outputs '4 comments'
     <span class="j18s-translate" data-j18s-text="% comment" data-j18s-plurals="% comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
+
+## License
+
+**MIT**
