@@ -238,7 +238,7 @@ multiple strings with semicolons.
 Example
 
     // outputs '4 comments'
-    <span class="j18s-translate" data-j18s-text="% comment" data-j18s-plurals="% comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
+    <span class="j18s-translate" data-j18s-text="%s comment" data-j18s-plurals="%s comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
 
 ## License
 
