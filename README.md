@@ -15,9 +15,9 @@ Include j18s.js in your page
 
     <script src="j18s.js"></script>
 
-In your HTML, add classname `j18s-translate` to an element to translate it.
+In your HTML, add `data-j18s-translate` attribute to an element to translate it.
 
-    <span class="j18s-translate">Translate this</span>
+    <span data-j18s-translate>Translate this</span>
 
 Create a script to add language data
 
@@ -193,52 +193,52 @@ Example
 You can set default option values (plural information etc.) directly to the HTML
 with `data-j18s-*` parameters.
 
-Any element that is being automatically translated need to have CSS class name
-`j18s-translate`
+Any element that is being automatically translated need to have 
+`data-j18s-translate` attribute set
 
 ### Singular text
 
 Singular text can be defined with `data-j18s-text` and if it not defined, `innerHTML` of the element
 value will be used instead.
 
-    <span class="j18s-translate">Menu</span> // 'text' value is 'Menu'
-    <span class="j18s-translate" data-j18s-text="Menüü">Menu</span> // 'text' value is 'Menüü'
+    <span data-j18s-translate>Menu</span> // 'text' value is 'Menu'
+    <span data-j18s-translate data-j18s-text="Menüü">Menu</span> // 'text' value is 'Menüü'
 
 ### Plural text
 
 Default plural text can be defined with `data-j18s-plural` and if it not defined, `data-j18s-text` value will be used instead.
 
-    <span class="j18s-translate" data-j18s-plural="Menus">Menu</span> // 'plural' value is 'Menus'
+    <span data-j18s-translate data-j18s-plural="Menus">Menu</span> // 'plural' value is 'Menus'
 
 ### Plural count
 
 Current plural count for selecting the correct plural form can be set with `data-j18s-plural-count`
 
-    <span class="j18s-translate" data-j18s-plural-count="6"></span>
+    <span data-j18s-translate data-j18s-plural-count="6"></span>
 
 ### Fix language
 
 If you want to fix the language that will be used to translate this element, use `data-j18s-use-lang`
 
-    <span class="j18s-translate" data-j18s-use-lang="en"></span> // always use 'en'
+    <span data-j18s-translate data-j18s-use-lang="en"></span> // always use 'en'
 
 ### Set context
 
 If you want to set the context for the used language, use `data-j18s-context`
 
-    <span class="j18s-translate" data-j18s-context="other"></span> // user "other" context
+    <span data-j18s-translate data-j18s-context="other"></span> // user "other" context
 
 ### Replacement strings
 
 If you want to use %s replacements, you can define the replacement strings with `data-j18s-text-args`. Split
 multiple strings with semicolons.
 
-    <span class="j18s-translate" data-j18s-text-args="first string; second string"></span>
+    <span data-j18s-translate data-j18s-text-args="first string; second string"></span>
 
 Example
 
     // outputs '4 comments'
-    <span class="j18s-translate" data-j18s-text="%s comment" data-j18s-plurals="%s comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
+    <span data-j18s-translate data-j18s-text="%s comment" data-j18s-plurals="%s comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
 
 ## License
 

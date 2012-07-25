@@ -89,7 +89,7 @@ var j18s = {
      * @param {String|Array} [options.textArgs] Replacement string or an array of strings for %s and %1$s blocks
      */
     createTranslationElement: function(elm, options){
-        var curClass, translationData;
+        var translationData;
 
         options = options || {};
 
@@ -110,10 +110,7 @@ var j18s = {
             this._setDataAttribute(elm, "useLang", options.useLang);
         }
 
-        curClass = (elm.className || "").toString();
-        if(!curClass.match(/\bj18s\-translate\b/)){
-            elm.className = (curClass.length?" ":"") + "j18s-translate";
-        }
+        this._setDataAttribute(elm, "translate", true);
 
         translationData = this._getTranslationData(elm);
         this.update.apply(this, [elm, translationData.context, translationData.pluralCount].concat(translationData.textArgs));
@@ -318,22 +315,41 @@ var j18s = {
     },
 
     /**
+     * Fetches all DOM elements with data-j18s-"name" attribute
+     *
+     * @return {Array} A list of matching elements
+     */
+    _selectorFunc: function(name){
+        if(document.querySelectorAll){
+            this._selectorFunc = function(name){
+                name = "data-j18s-" + this._fromCamelCase(name);
+                return document.querySelectorAll("[" + name + "]");
+            };
+        }else{
+            this._selectorFunc = function(name){
+                var j18sElements = [],
+                    elements = document.getElementsByTagName("*");
+
+                name = "data-j18s-" + this._fromCamelCase(name);
+
+                for(var i=0; i<elements.length; i++) {
+                    if(typeof elements[i].getAttribute(name) == "string"){
+                        j18sElements.push(elements[i]);
+                    }
+                }
+
+                return j18sElements;
+            };
+        }
+        return this._selectorFunc(name);
+    },
+
+    /**
      * Updates all translations in the current document
      */
     _updateTranslations: function(){
         var translationData,
-            that = this,
-            selectorFunc = (document.querySelectorAll && function(s){
-                    return document.querySelectorAll(s);
-                }) ||
-                (typeof $$ == "function" && $$) ||
-                (typeof $ == "function" && $) ||
-                (typeof jQuery == "function" && jQuery) ||
-                function(s){
-                    return that._getElementsByClassName(s);
-                };
-
-        var elements = Array.prototype.slice.call(selectorFunc(".j18s-translate"));
+            elements = Array.prototype.slice.call(this._selectorFunc("translate"));
 
         for(var i=0, len = elements.length; i<len; i++){
             translationData = this._getTranslationData(elements[i]);
@@ -373,39 +389,6 @@ var j18s = {
     _compilePluralForms: function(pluralForms){
         pluralForms = pluralForms || "nplurals=2; plural=n != 1";
         return new Function("n", pluralForms+"; return Number(plural) || 0;");
-    },
-
-    /**
-     * Returns a list of elements that have selected class name set
-     * 
-     * @param {Element} elm DOM element
-     * @param {String} classname Class name to search for
-     * @return {Array} A list of matching elements
-     */
-    _getElementsByClassName: function(classname) {
-        if (document.getElementsByClassName){
-            this._getElementsByClassName = function(classname){
-                classname = (classname || "").toString().replace(/^\./, "");
-                return document.getElementsByClassName(classname);
-            };
-        }else {
-            this._getElementsByClassName = function(classname){
-                classname = (classname || "").toString().replace(/^\./, "");
-
-                var classElements = [],
-                    re = new RegExp("\\b"+classname.replace(/([\-])/g,"\\$1")+"\\b"),
-                    elements = document.getElementsByTagName("*");
-
-                for(var i=0; i<elements.length; i++) {
-                    if(re.test(elements[i].className)){
-                        classElements.push(elements[i]);
-                    }
-                }
-
-                return classElements;
-            };
-        }
-        return this._getElementsByClassName(classname);
     },
 
     /**
@@ -508,8 +491,8 @@ var j18s = {
                         that._eventListeners[eventName][i].apply(this, args);
                     }, 0);
                 })(i);
-                
             }
         }
     }
+
 };
