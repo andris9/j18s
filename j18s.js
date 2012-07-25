@@ -230,6 +230,50 @@ var j18s = {
         }
     },
 
+    /**
+     * Gathers all active translation strings (originals, not translations)
+     *
+     * @return {Object} Currently used translation strings
+     */
+    gatherTranslationStrings: function(){
+        var translationTable = {},
+            elements = this._selectorFunc("translate"),
+            element, context, singular, plural, translation;
+
+        for(var i=0, len = elements.length; i<len; i++){
+            element = elements[i];
+
+            singular = this._getDataAttribute(element, "text");
+            plural = this._getDataAttribute(element, "plural");
+            context = this._getDataAttribute(element, "context", "default");
+
+            if(typeof singular == "undefined"){
+                singular = this._trim(element.innerHTML);
+            }
+
+            if(!singular){
+                continue;
+            }
+
+            translation = singular;
+
+            if(plural && plural != singular){
+                translation = [singular, plural];
+            }
+            
+            if(!translationTable[context]){
+                translationTable[context] = {};
+            }
+
+            if(singular in translationTable[context]){
+                continue;
+            }
+            translationTable[context][singular] = translation;
+        }
+
+        return translationTable;
+    },
+
     // PRIVATE API
 
     /**
@@ -323,7 +367,7 @@ var j18s = {
         if(document.querySelectorAll){
             this._selectorFunc = function(name){
                 name = "data-j18s-" + this._fromCamelCase(name);
-                return document.querySelectorAll("[" + name + "]");
+                return Array.prototype.slice.call(document.querySelectorAll("[" + name + "]"));
             };
         }else{
             this._selectorFunc = function(name){
@@ -349,7 +393,7 @@ var j18s = {
      */
     _updateTranslations: function(){
         var translationData,
-            elements = Array.prototype.slice.call(this._selectorFunc("translate"));
+            elements = this._selectorFunc("translate");
 
         for(var i=0, len = elements.length; i<len; i++){
             translationData = this._getTranslationData(elements[i]);

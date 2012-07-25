@@ -16,6 +16,7 @@
                     "English": "Inglise keeles",
                     "Estonian": "Eesti keeles",
                     "Change comment count": "Muuda kommentaaride arvu",
+                    "Generate translation object": "Genereeri tõlgete nimekiri",
                     "et": "Eesti",
                     "en": "Inglise"
                 }
@@ -47,6 +48,11 @@
                     textArgs: [comments]
                 });
             }
+
+            // alerts currently used translation strings
+            function generateTranslations(){
+                alert(JSON.stringify(j18s.gatherTranslationStrings()));
+            }
         </script>
     </head>
     <body>
@@ -68,6 +74,9 @@
         </p>
         <p>
             <a href="javascript:changeComments()" data-j18s-translate data-j18s-context="menu">Change comment count</a>
+        </p>
+        <p>
+            <a href="javascript:generateTranslations()" data-j18s-translate data-j18s-context="menu">Generate translation object</a>
         </p>
 
         <script>
