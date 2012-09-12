@@ -1,6 +1,7 @@
 {
     "default": {
         "Current language: %s": "Hetke keel: %s",
+        "Open this page in multiple tabs or windows and if language is changed in one tab, the others should change too.":"Ava see leht mitmes brauseri aknas/tabis ning kui ühes keel muutub, muutub see ka teistes",
         "English": "Inglise keel",
         "Estonian": "Eesti keel",
         "en": "Inglise keel",
