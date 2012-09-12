@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>j18s translations</title>
+        
+        <script src="../j18s.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        <script src="https://raw.github.com/andris9/jStorage/master/jstorage.js"></script>
+        <script>
+            // listen for changes in other tabs/windows
+            $.jStorage.listenKeyChange("site_lang", function(){
+                j18s.setLang($.jStorage.get("site_lang"));
+            });
+
+            // check if the language needs to be loaded
+            j18s.on("change", function(lang){
+                if(!j18s.hasLang(lang)){
+                    $.getJSON("langs/lang-"+lang+".json", function(langData){
+                        j18s.addLang(lang, langData);
+                        j18s.update(document.getElementById("lang"),{
+                            textArgs: j18s.translate(lang)
+                        });
+                    });
+                }else{
+                    j18s.update(document.getElementById("lang"),{
+                        textArgs: j18s.translate(lang)
+                    });
+                }
+            });
+
+            // Use this function from the code to change current language
+            function setLang(lang){
+                $.jStorage.set("site_lang", lang);
+                j18s.setLang(lang);
+            }
+
+            // setup boot time language
+            setLang($.jStorage.get("site_lang", "en"));
+        </script>
+    </head>
+    <body>
+        <p>
+            <a href="javascript:setLang('en')" data-j18s>English</a>
+            |
+            <a href="javascript:setLang('et')" data-j18s>Estonian</a>
+        </p>
+        <p>
+            <span id="lang" data-j18s data-j18s-text="Current language: %s" data-j18s-text-args="en">Current language: English</span>
+        <p>
+    </body>
+</html>

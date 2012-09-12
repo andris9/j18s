@@ -7,7 +7,7 @@ This module mainly deals with DOM elements that are marked to be translated. If 
 language, all DOM elements that are marked for translation are translated automatically, keeping
 correct plurals etc.
 
-See the [demo here](http://tahvel.info/j18s/example.html).
+See the [demo here](http://tahvel.info/j18s/examples/example.html).
 
 ## Usage
 
@@ -15,9 +15,9 @@ Include j18s.js in your page
 
     <script src="j18s.js"></script>
 
-In your HTML, add `data-j18s-translate` attribute to an element to translate it.
+In your HTML, add `data-j18s` attribute to an element to translate it.
 
-    <span data-j18s-translate>Translate this</span>
+    <span data-j18s>Translate this</span>
 
 Create a script to add language data
 
@@ -92,10 +92,45 @@ You can register language change handlers with `on("change")`
 For example, you could use this feature to lazy load the language data from the server.
 
     j18s.on("change", function(lang){
-        yourLoadJsonWithAjax("/load-language.php?lang="+lang, function(langData){
+        $.getJSON("/languages/"+lang+".json", function(langData){
             j18s.addLang(lang, langData);
-        })
+        });
     });
+
+You could also mix this library with [jStorage](http://www.jstorage.info/) to automatically
+detect if the language has been changed in another tab/window/frame and change it in the current
+window as well.
+
+    <script src="j18s.js"></script>
+    <script src="json2.js"></script>
+    <script src="jquery.js"></script>
+    <script src="jstorage.js"></script>
+    <script>
+        // listen for changes in other tabs/windows
+        $.jStorage.listenKeyChange("site_lang", function(){
+            j18s.setLang($.jStorage.get("site_lang"));
+        });
+
+        // check if the language needs to be loaded
+        j18s.on("change", function(lang){
+            if(!j18s.hasLang(lang)){
+                $.getJSON("/languages/"+lang+".json", function(langData){
+                    j18s.addLang(lang, langData);
+                });
+            }
+        });
+
+        // Use this function from the code to change current language
+        function setLang(lang){
+            $.jStorage.set("site_lang", lang);
+            j18s.setLang(lang);
+        }
+
+        // setup boot time language
+        setLang($.jStorage.get("site_lang"));
+    </script>
+
+See [examples/jstorage-example.html](http://tahvel.info/j18s/examples/jstorage-example.html) for a demo.
 
 ### Translate a String
 
@@ -194,51 +229,51 @@ You can set default option values (plural information etc.) directly to the HTML
 with `data-j18s-*` parameters.
 
 Any element that is being automatically translated need to have 
-`data-j18s-translate` attribute set
+`data-j18s` attribute set
 
 ### Singular text
 
 Singular text can be defined with `data-j18s-text` and if it not defined, `innerHTML` of the element
 value will be used instead.
 
-    <span data-j18s-translate>Menu</span> // 'text' value is 'Menu'
-    <span data-j18s-translate data-j18s-text="Menüü">Menu</span> // 'text' value is 'Menüü'
+    <span data-j18s>Menu</span> // 'text' value is 'Menu'
+    <span data-j18s data-j18s-text="Menüü">Menu</span> // 'text' value is 'Menüü'
 
 ### Plural text
 
 Default plural text can be defined with `data-j18s-plural` and if it not defined, `data-j18s-text` value will be used instead.
 
-    <span data-j18s-translate data-j18s-plural="Menus">Menu</span> // 'plural' value is 'Menus'
+    <span data-j18s data-j18s-plural="Menus">Menu</span> // 'plural' value is 'Menus'
 
 ### Plural count
 
 Current plural count for selecting the correct plural form can be set with `data-j18s-plural-count`
 
-    <span data-j18s-translate data-j18s-plural-count="6"></span>
+    <span data-j18s data-j18s-plural-count="6"></span>
 
 ### Fix language
 
 If you want to fix the language that will be used to translate this element, use `data-j18s-use-lang`
 
-    <span data-j18s-translate data-j18s-use-lang="en"></span> // always use 'en'
+    <span data-j18s data-j18s-use-lang="en"></span> // always use 'en'
 
 ### Set context
 
 If you want to set the context for the used language, use `data-j18s-context`
 
-    <span data-j18s-translate data-j18s-context="other"></span> // user "other" context
+    <span data-j18s data-j18s-context="other"></span> // user "other" context
 
 ### Replacement strings
 
 If you want to use %s replacements, you can define the replacement strings with `data-j18s-text-args`. Split
 multiple strings with semicolons.
 
-    <span data-j18s-translate data-j18s-text-args="first string; second string"></span>
+    <span data-j18s data-j18s-text-args="first string; second string"></span>
 
 Example
 
     // outputs '4 comments'
-    <span data-j18s-translate data-j18s-text="%s comment" data-j18s-plurals="%s comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
+    <span data-j18s data-j18s-text="%s comment" data-j18s-plurals="%s comments" data-j18s-plural-count="4" data-j18s-text-args="4"></span>
 
 ## License
 

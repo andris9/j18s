@@ -77,6 +77,17 @@ var j18s = {
     },
 
     /**
+     * Checks if a language has been already loaded
+     *
+     * @param {String} lang Language identifier
+     * @return {Boolean} Return true if yes, or false if not
+     */
+    hasLang: function(lang){
+        lang = (lang || "").toString();
+        return !!this._translations[lang];
+    },
+
+    /**
      * Converts ordinary DOM element into translated element
      * 
      * @param {Element} elm DOM element
@@ -237,7 +248,7 @@ var j18s = {
      */
     gatherTranslationStrings: function(){
         var translationTable = {},
-            elements = this._selectorFunc("translate"),
+            elements = this._selectorFunc(),
             element, context, singular, plural, translation;
 
         for(var i=0, len = elements.length; i<len; i++){
@@ -366,7 +377,11 @@ var j18s = {
     _selectorFunc: function(name){
         if(document.querySelectorAll){
             this._selectorFunc = function(name){
-                name = "data-j18s-" + this._fromCamelCase(name);
+                if(!name){
+                    name = "data-j18s";
+                }else{
+                    name = "data-j18s-" + this._fromCamelCase(name);
+                }
                 return Array.prototype.slice.call(document.querySelectorAll("[" + name + "]"));
             };
         }else{
@@ -374,7 +389,11 @@ var j18s = {
                 var j18sElements = [],
                     elements = document.getElementsByTagName("*");
 
-                name = "data-j18s-" + this._fromCamelCase(name);
+                if(!name){
+                    name = "data-j18s";
+                }else{
+                    name = "data-j18s-" + this._fromCamelCase(name);
+                }
 
                 for(var i=0; i<elements.length; i++) {
                     if(typeof elements[i].getAttribute(name) == "string"){
@@ -393,7 +412,7 @@ var j18s = {
      */
     _updateTranslations: function(){
         var translationData,
-            elements = this._selectorFunc("translate");
+            elements = this._selectorFunc();
 
         for(var i=0, len = elements.length; i<len; i++){
             translationData = this._getTranslationData(elements[i]);

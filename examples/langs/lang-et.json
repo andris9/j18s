@@ -1,0 +1,9 @@
+{
+    "default": {
+        "Current language: %s": "Hetke keel: %s",
+        "English": "Inglise keel",
+        "Estonian": "Eesti keel",
+        "en": "Inglise keel",
+        "et": "Eesti keel"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "default": {
+        "Current language: %s": "Current language: %s",
+        "English": "English",
+        "Estonian": "Estonian",
+        "en": "English",
+        "et": "Estonian"
+    }
+}

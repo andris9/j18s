@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <title>j18s translations</title>
-        <script src="j18s.js"></script>
+        <script src="../j18s.js"></script>
 
         <script>
             // Add translation strings
@@ -57,15 +57,15 @@
     </head>
     <body>
         <p>
-            <a href="javascript:j18s.setLang('en')" data-j18s-translate data-j18s-context="menu">English</a>
+            <a href="javascript:j18s.setLang('en')" data-j18s data-j18s-context="menu">English</a>
             |
-            <a href="javascript:j18s.setLang('et')" data-j18s-translate data-j18s-context="menu">Estonian</a>
+            <a href="javascript:j18s.setLang('et')" data-j18s data-j18s-context="menu">Estonian</a>
         </p>
         <p>
-            <span id="lang" data-j18s-translate data-j18s-text-args="en" data-j18s-text="Current language: %s">Current language: English</span>        </p>
+            <span id="lang" data-j18s data-j18s-text-args="en" data-j18s-text="Current language: %s">Current language: English</span>        </p>
         <p>
             <span id="comments" 
-                data-j18s-translate
+                data-j18s
                 data-j18s-text="This post has %s comment"
                 data-j18s-plural="This post has %s comments"
                 data-j18s-plural-count="5"
@@ -73,10 +73,10 @@
                 >This post has 5 comments</span>
         </p>
         <p>
-            <a href="javascript:changeComments()" data-j18s-translate data-j18s-context="menu">Change comment count</a>
+            <a href="javascript:changeComments()" data-j18s data-j18s-context="menu">Change comment count</a>
         </p>
         <p>
-            <a href="javascript:generateTranslations()" data-j18s-translate data-j18s-context="menu">Generate translation object</a>
+            <a href="javascript:generateTranslations()" data-j18s data-j18s-context="menu">Generate translation object</a>
         </p>
 
         <script>
